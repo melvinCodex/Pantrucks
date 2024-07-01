@@ -1,0 +1,323 @@
+<%-include('./partials/header.ejs')%>
+
+<nav>
+    <div class="logo">
+        <img src="Images/navLogo.png">
+    </div>
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about-us">About Us</a></li>
+        <li class="drop-down">
+            <a class="active" href="/categories">Categories</a>
+            <div class="categories-container pop-up-menu">
+                <ul>
+                    <% if (Category.length === 0) { %>
+                        <p>No categories found.</p>
+                    <% }  else { %>
+                        <% Category.forEach(category => { %>
+                                <li data-tag="<%=category.name%>">
+                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                    <h2><%= category.name %></h2>
+                                </li>
+                        <% }); %>
+                    <% } %>
+                    
+                </ul>
+            </div>
+        </li>
+        <li class="drop-down">
+            <a href="/services">Services</a>
+            <div class="service-container pop-up-menu">
+                <ul>
+                    <% if (Services.length === 0) { %>
+                        <p>No services found.</p>
+                    <% }  else { %>
+                        <% Services.forEach(category => { %>
+                                <li data-tag="<%=category.name%>">
+                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                    <h2><%= category.name %></h2>
+                                </li>
+                        <% }); %>
+                    <% } %>
+                </ul>
+            </div>
+        </li>
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/contact-us">Contact Us</a></li>
+    </ul>
+    <div class="search-bar">
+        <span class="icon"><img src="Images/search.png"></span>
+        <input type="search" placeholder=" Search through our collection">
+        <div class="search-parts-container">
+            <% if (Products.length === 0) { %>
+                <p>No products found.</p>
+            <% } else { %>
+                <% Products.forEach(Product => { %>
+                    <a href="/details/<%=Product.i_d%>">
+                        <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>">
+                            <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                            <h3><%= Product.name %></h3>
+                        </div>
+                    </a>
+                <% }); %>
+            <% } %>  
+        </div>
+    </div>
+    <ul class="nav-icons">
+        <li><h3 class="cartCount"><%=cartProducts.length%></h3><a href="/cart"><img src="Images/cart.png" id="cart"></a></li>
+        <li id="open"><img src="Images/open.png"></li>
+        <li id="close"><img src="Images/close.png"></li>
+    </ul>
+</nav>
+
+<section class="category-banner top-banner">
+    
+    <div class="right">
+        <img src="data:image/jpg;base64,<%= categor.image.data.toString('base64') %>" alt="<%= categor.name %>">
+    </div>
+    <style>
+        .top-banner .right img{
+            aspect-ratio: 1/.6;
+
+        }
+    </style>
+    <div class="category-info">
+        <h3 class="cat-name"><%=categor.name%></h3>
+        <p>
+            <%=categor.details%>
+        </p>
+    </div>
+</section>
+
+
+<section class="categories">
+    <h2 class="cat-h2">Categories</h2>
+    <div class="category-container">
+        <div class="mini-card-container">
+            <% if (Category.length === 0) { %>
+                <p>No categories found.</p>
+            <% }  else { %>
+                <% Category.forEach(category => { %>
+                        <%if(category.name === categor.name){%>
+                            <div class="mini-card active" data-tag="<%=category.name%>">
+                                <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                <h3><%= category.name %></h3>
+                            </div>
+                        <%}else{%>
+                            <div class="mini-card" data-tag="<%=category.name%>">
+                                <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                <h3><%= category.name %></h3>
+                            </div>
+                        <%}%>
+                <% }); %>
+            <% } %>
+            
+        </div>
+        <h2>Available Parts in This Category</h2>
+        <div class="card-container">
+            <% if (Object.values(Products).find(product => product.category !== undefined).length === 0) { %>
+                <p>No products found.</p>
+            <% } else { %>
+                <% Object.values(Products).filter(product => product.category !== undefined).slice(0, 24).forEach(choice => { %>
+                    <% const matchingProduct = Products.find(product => product.name === choice.name); %>
+                        <div class="card" data-category= "<%= matchingProduct.category %>" data-brand= "<%= matchingProduct.brand %>">
+                            <% if (matchingProduct) { %>
+                                <img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>">
+                            <% } %>
+                            <h2><%= matchingProduct.name %></h2>
+                            <h3>Ksh <%= matchingProduct.price %> /-</h3>
+                            <div class="button-container">
+                                <button class="success" data-tag="<%= matchingProduct.name %>">Add to Cart</button>
+                                <button class="danger">Details<span></span></button> 
+                                
+                            </div>
+                            <div class="rating">
+                                <img src="Images/star.png">
+                                <img src="Images/star.png">
+                                <img src="Images/star.png">
+                                <img src="Images/star.png">
+                                <img src="Images/star.png">
+                            </div>
+                            <div class="cardDetails none">
+                                <p>
+                                    Description: <%= matchingProduct.productDescription %>
+                                </p>
+                                <p>
+                                    <span >Country of Origin:</span> <%= matchingProduct.countryOfOrigin %>
+                                </p>
+                                <p>
+                                    <span >Part Number:</span> <%= matchingProduct.partNumber %>
+                                </p>
+                                <p>
+                                    <span >Manufacturer:</span> <%= matchingProduct.manufacturer %>
+                                </p>
+                            </div>
+                        </div>
+                <% }); %>
+            <% } %>  
+        </div>
+    </div>
+</section>
+
+
+<section class="customer-reviews">
+    <h2>CUSTOMER REVIEWS</h2>
+    <div class="card-container">
+        <div class="review card1">
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+            <h4>Name of Person</h4>
+            <div class="rating">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+            </div>
+        </div>
+        <div class="review card2">
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+            <h4>Name of Person</h4>
+            <div class="rating">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+            </div>
+        </div>
+        <div class="review card3">
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+            <h4>Name of Person</h4>
+            <div class="rating">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+            </div>
+        </div>
+        <div class="review card4">
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+            <h4>Name of Person</h4>
+            <div class="rating">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+            </div>
+        </div>
+        <div class="review card5">
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+            <h4>Name of Person</h4>
+            <div class="rating">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    .cardDetails{
+    transform: translateY(-15rem);
+    }
+    @media screen and (max-width: 550px){
+    .cardDetails{
+    transform: translateY(-25rem);
+    }
+}
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const storedTag = sessionStorage.getItem('selectedCategoryTag');
+    if (storedTag) {
+        const categoryName = document.querySelector('.category-banner .right > h2');
+        if (categoryName) {
+            categoryName.textContent = linkCategoryData;
+        }
+    }
+
+
+  const addToCartButtons = document.querySelectorAll('.card .success');
+let cartItemsArray = sessionStorage.getItem('cartItems');
+
+// If cartItemsArray is null (i.e., no items in sessionStorage), initialize it as an empty array
+if (!cartItemsArray) {
+    cartItemsArray = [];
+} else {
+    // Parse the existing data from sessionStorage
+    cartItemsArray = JSON.parse(cartItemsArray);
+}
+
+addToCartButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        let productName = button.dataset.tag;
+        cartItemsArray.push(productName);
+        
+        // Use a Set to store unique values
+        const uniqueItemsSet = new Set(cartItemsArray);
+        cartItemsArray = Array.from(uniqueItemsSet); // Convert back to array
+
+        console.log('Cart Items Array:', cartItemsArray);
+        sessionStorage.setItem('cartItems', JSON.stringify(cartItemsArray));
+        // Send the updated array to the server
+        fetch('/cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(cartItemsArray) // Ensure cartItemsArray is correctly formatted
+        })
+        .then(response => response.json())
+        .then(data => {
+            sessionStorage.setItem('cartNum', data);
+            document.querySelector('.cartCount').innerHTML = data;
+        })
+        .catch(error => {
+            console.error('Error sending cart items:', error);
+        });
+    });
+});
+
+
+
+});
+
+const detailsButtons = document.querySelectorAll('.card .danger');
+const detailsCards = document.querySelectorAll('.cardDetails')
+// Function to remove the 'none' class from all .cardDetails elements
+function removeDetails(exceptElement = null) {
+    document.querySelectorAll('.cardDetails').forEach(details => {
+        if (details !== exceptElement) {
+            details.classList.add('none');
+        }
+    });
+}
+
+
+detailsButtons.forEach(button => {
+  
+    button.addEventListener('click', () => {
+       
+        let cardDetails = button.closest('.card').querySelector('.cardDetails');
+        
+        // Toggle the visibility of the cardDetails element
+        if (cardDetails.classList.contains('none')) {
+            removeDetails(cardDetails); // Hide all other details
+            cardDetails.classList.remove('none'); // Show current details
+        } else {
+            cardDetails.classList.add('none'); // Hide current details
+        }
+    });
+});
+
+ </script>
+
+<script>window.addEventListener('beforeunload', function(event) {
+        console.log('Clearing session storage');
+        sessionStorage.removeItem('cartItems');
+    });</script><%-include('./partials/footer.ejs')%>

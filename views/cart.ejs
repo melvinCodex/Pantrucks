@@ -1,0 +1,186 @@
+<%- include('./partials/header.ejs') %>
+
+<nav>
+    <div class="logo">
+        <img src="Images/navLogo.png">
+    </div>
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about-us">About Us</a></li>
+        <li class="drop-down">
+            <a href="/categories">Categories</a>
+            <div class="categories-container pop-up-menu">
+                <ul>
+                    <% if (Category.length === 0) { %>
+                        <p>No categories found.</p>
+                    <% } else { %>
+                        <% Category.forEach(category => { %>
+                            <li data-tag="<%= category.name %>">
+                                <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                <h2><%= category.name %></h2>
+                            </li>
+                        <% }); %>
+                    <% } %>
+                </ul>
+            </div>
+        </li>
+        <li class="drop-down">
+            <a href="/services">Services</a>
+            <div class="service-container pop-up-menu">
+                <ul>
+                    <% if (Services.length === 0) { %>
+                        <p>No services found.</p>
+                    <% } else { %>
+                        <% Services.forEach(service => { %>
+                            <li data-tag="<%= service.name %>">
+                                <img src="data:image/jpg;base64,<%= service.image.data.toString('base64') %>" alt="<%= service.name %>">
+                                <h2><%= service.name %></h2>
+                            </li>
+                        <% }); %>
+                    <% } %>
+                </ul>
+            </div>
+        </li>
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/contact-us">Contact Us</a></li>
+    </ul>
+    <div class="search-bar">
+        <span class="icon"><img src="Images/search.png"></span>
+        <input type="search" placeholder="Search through our collection">
+        <div class="search-parts-container">
+            <% if (Products.length === 0) { %>
+                <p>No products found.</p>
+            <% } else { %>
+                <% Products.forEach(Product => { %>
+                    <a href="/details/<%= Product._id %>">
+                        <div class="card" data-category="<%= Product.category %>" data-brand="<%= Product.brand %>">
+                            <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                            <h3><%= Product.name %></h3>
+                        </div>
+                    </a>
+                <% }); %>
+            <% } %>
+        </div>
+    </div>
+    <ul class="nav-icons">
+        <li><h3 class="cartCount"><%=cartProducts.length%></h3><a href="/cart"><img src="Images/cart.png" id="cart"></a></li>
+        <li id="open"><img src="Images/open.png"></li>
+        <li id="close"><img src="Images/close.png"></li>
+    </ul>
+</nav>
+
+<section class="cart top-banner">
+    <table class="cp">
+        <h3>Shopping Cart</h3>
+        <thead>
+            <tr>
+                <th>Cancel</th>
+                <th class="product-image">Image</th>
+                <th>Product</th>
+                <th class="Description">Description</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (cartProducts.length === 0) { %>
+                <p>Nothing added to cart yet.</p>
+            <% } else { %>
+                <% cartProducts.forEach(Product => { %>
+                    <tr>
+                        <td class="remove"><img src="Images/close.png"></td>
+                        <td class="product-image"><img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>"></td>
+                        <td><h2 class="productName"><%= Product.name %></h2></td>
+                        <td class="Description"><p><%= Product.productDescription %></p></td>
+                        <td><input type="number" placeholder="1"></td>
+                    </tr>
+                <% }); %>
+            <% } %>
+        </tbody>
+    </table>
+    <h4 class="updated">Cart Updated!</h4>
+    <button class="check-out">REQUEST QUOTATION</button>
+    <div class="info">
+        <form action="/addCartRequest" method="post" class="none">
+            <ul>
+                <li class="spec-input">
+                    <div>
+                        <label for="first-user-name"></label>
+                        <input type="text" name="firstUserName" placeholder="First name" required>
+                    </div>
+                    <div>
+                        <label for="last-user-name"></label>
+                        <input type="text" name="lastUserName" placeholder="Last Name" required>
+                    </div>
+                </li>
+                <li class="spec-input">
+                    <div>
+                        <label for="Mobile-number"></label>
+                        <input type="number" name="mobileNumber" placeholder="Mobile number" required>
+                    </div>
+                    <div>
+                        <label for="email"></label>
+                        <input type="email" name="email" placeholder="Email" required>
+                    </div>
+                </li>
+            </ul>
+            <button class="danger">Submit</button>
+        </form>
+        <style>
+            .cart form input {
+                width: 30vw;
+            }
+            .cart form button {
+                margin-left: 20vw;
+            }
+            @media screen and (max-width: 900px) {
+                .cart form button {
+                    transform: translateX(10vw);
+                }
+            }
+        </style>
+    </div>
+</section>
+
+<script>
+    const products = document.querySelectorAll('.productName'); // Corrected selector
+    const form = document.querySelector('form'); // Assuming there's only one form
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let names = [];
+        products.forEach(product => {
+            names.push(product.textContent.trim());
+        });
+
+        const formData = new FormData(this);
+        let formDataObj = {};
+        formData.forEach((value, key) => {
+            formDataObj[key] = value;
+        });
+        formDataObj.names = names;
+        console.log(formDataObj); // For debugging
+
+        try {
+            const response = await fetch('/addCartRequest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formDataObj)
+            });
+
+            if (response.ok) {
+                alert('Request received successfully, we will be in touch shortly.');
+                window.location.reload(true);
+            } else {
+                alert('Error uploading product');
+            }
+        } catch (err) {
+            console.error('Error uploading product', err);
+        }
+    });
+</script>
+
+
+
+<%- include('./partials/footer.ejs') %>

@@ -1,0 +1,195 @@
+<%-include('./partials/header.ejs')%>
+
+
+<nav>
+    <div class="logo">
+        <img src="Images/navLogo.png">
+    </div>
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about-us">About Us</a></li>
+        <li class="drop-down">
+            <a href="/categories">Categories</a>
+            <div class="categories-container pop-up-menu">
+                <ul>
+                    <% if (Category.length === 0) { %>
+                        <p>No categories found.</p>
+                    <% }  else { %>
+                        <% Category.forEach(category => { %>
+                                <li data-tag="<%=category.name%>">
+                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                    <h2><%= category.name %></h2>
+                                </li>
+                        <% }); %>
+                    <% } %>
+                    
+                </ul>
+            </div>
+        </li>
+        <li class="drop-down">
+            <a class="active" href="/services">Services</a>
+            <div class="service-container pop-up-menu">
+                <ul>
+                    <% if (Services.length === 0) { %>
+                        <p>No services found.</p>
+                    <% }  else { %>
+                        <% Services.forEach(category => { %>
+                                <li data-tag="<%=category.name%>">
+                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                    <h2><%= category.name %></h2>
+                                </li>
+                        <% }); %>
+                    <% } %>
+                </ul>
+            </div>
+        </li>
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/contact-us">Contact Us</a></li>
+    </ul>
+    <div class="search-bar">
+        <span class="icon"><img src="Images/search.png"></span>
+        <input type="search" placeholder=" Search through our collection">
+        <div class="search-parts-container">
+            <% if (Products.length === 0) { %>
+                <p>No products found.</p>
+            <% } else { %>
+                <% Products.forEach(Product => { %>
+                    <a href="/details/<%=Product.i_d%>">
+                        <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>">
+                            <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                            <h3><%= Product.name %></h3>
+                        </div>
+                    </a>
+                <% }); %>
+            <% } %>  
+        </div>
+    </div>
+    <ul class="nav-icons">
+        <li><h3 class="cartCount"><%=cartProducts.length%></h3><a href="/cart"><img src="Images/cart.png" id="cart"></a></li>
+        <li id="open"><img src="Images/open.png"></li>
+        <li id="close"><img src="Images/close.png"></li>
+    </ul>
+</nav>
+
+<section class="service top-banner">
+    <h2>serve.name</h2>
+    <div class="service-container">
+        <div class="gallery">
+            <img src="data:image/jpg;base64,<%= serve.image.data.toString('base64') %>" alt="<%= serve.name %>">
+            <img src="data:image/jpg;base64,<%= serve.image1.data.toString('base64') %>" alt="<%= serve.name %>">
+        </div>
+        <div class="right">
+            <div class="overview">
+                <h3>Service Overview</h3>
+                <p><%= serve.overview %></p>
+        </div>
+        
+            <div class="why-us">
+                <h3>Why choose us?</h3>
+                <h2>PanTracks is a reknown company when it comes with dealership of Lorem ipsum, dolor sit amet consectetur adipisicing elit.</h2>
+            </div>
+            <div class="faqs">
+                <h3>Frequently asked questions</h3>
+                <ul class="faqs">
+                    <li>
+                        <div><img class="drop" src="Images/drop.png"><h4>Do these products come with a warranty?</h4></div>
+                        <h5 class="answer">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta quia aliquid eveniet deserunt dolorem hic.</h5>
+                    </li>
+                    <li>
+                        <div><img class="drop" src="Images/drop.png"><h4>Do these products come with a warranty?</h4></div>
+                        <h5 class="answer">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta quia aliquid eveniet deserunt dolorem hic.</h5>
+                    </li>
+                    <li>
+                        <div><img class="drop" src="Images/drop.png"><h4>Do these products come with a warranty?</h4></div>
+                        <h5 class="answer">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta quia aliquid eveniet deserunt dolorem hic.</h5>
+                    </li>
+                    <li>
+                        <div><img class="drop" src="Images/drop.png"><h4>Do these products come with a warranty?</h4></div>
+                        <h5 class="answer">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta quia aliquid eveniet deserunt dolorem hic.</h5>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="customer-reviews">
+    <h2>CUSTOMER REVIEWS</h2>
+    <div class="card-container">
+        <div class="review card1">
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+            <h4>Name of Person</h4>
+            <div class="rating">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+            </div>
+        </div>
+        <div class="review card2">
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+            <h4>Name of Person</h4>
+            <div class="rating">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+            </div>
+        </div>
+        <div class="review card3">
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+            <h4>Name of Person</h4>
+            <div class="rating">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+            </div>
+        </div>
+        <div class="review card4">
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+            <h4>Name of Person</h4>
+            <div class="rating">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+            </div>
+        </div>
+        <div class="review card5">
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+            <h4>Name of Person</h4>
+            <div class="rating">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+                <img src="Images/star.png">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+ <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const storedTag = sessionStorage.getItem('selectedTag');
+    if (storedTag) {
+        const serviceName = document.querySelector('.service > h2');
+        if (serviceName) {
+            serviceName.textContent = storedTag;
+        }
+    }
+});
+ </script>
+
+
+<script>window.addEventListener('beforeunload', function(event) {
+        console.log('Clearing session storage');
+        sessionStorage.removeItem('cartItems');
+    });</script><%-include('./partials/footer.ejs')%>

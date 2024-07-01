@@ -1,0 +1,139 @@
+<%-include('./partials/header.ejs')%>
+
+<nav>
+    <div class="logo">
+        <img src="Images/navLogo.png">
+    </div>
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a class="active" href="/about-us">About Us</a></li>
+        <li class="drop-down">
+            <a href="/categories">Categories</a>
+            <div class="categories-container pop-up-menu">
+                <ul>
+                    <% if (Category.length === 0) { %>
+                        <p>No categories found.</p>
+                    <% }  else { %>
+                        <% Category.forEach(category => { %>
+                                <li data-tag="<%=category.name%>">
+                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                    <h2><%= category.name %></h2>
+                                </li>
+                        <% }); %>
+                    <% } %>
+                    
+                </ul>
+            </div>
+        </li>
+        <li class="drop-down">
+            <a href="/services">Services</a>
+            <div class="service-container pop-up-menu">
+                <ul>
+                    <% if (Services.length === 0) { %>
+                        <p>No services found.</p>
+                    <% }  else { %>
+                        <% Services.forEach(category => { %>
+                                <li data-tag="<%=category.name%>">
+                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                    <h2><%= category.name %></h2>
+                                </li>
+                        <% }); %>
+                    <% } %>
+                </ul>
+            </div>
+        </li>
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/contact-us">Contact Us</a></li>
+    </ul>
+    <div class="search-bar">
+        <span class="icon"><img src="Images/search.png"></span>
+        <input type="search" placeholder=" Search through our collection">
+        <div class="search-parts-container">
+            <div class="card">
+                <img src="Images/chasis.png">
+                <h3>Named product</h3>
+            </div>
+            <% if (Products.length === 0) { %>
+                <p>No products found.</p>
+            <% } else { %>
+                <% Products.forEach(Product => { %>
+                    <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>">
+                        <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                        <h3><%= Product.name %></h3>
+                    </div>
+                <% }); %>
+            <% } %>  
+            </div>
+        </div>
+    <ul class="nav-icons">
+        <li><h3 class="cartCount"><%=cartProducts.length%></h3><a href="/cart"><img src="Images/cart.png" id="cart"></a></li>
+        <li id="open"><img src="Images/open.png"></li>
+        <li id="close"><img src="Images/close.png"></li>
+    </ul>
+</nav>
+
+<h3 class="about">About Us</h3>
+<section class="about-banner top-banner">
+    <div class="left">
+        <h2>
+            PanTracks Company Ltd
+        </h2>
+        <p>
+            Pan Tracks is a leading provider of high-quality trailer spare parts in Kenya, dedicated to ensuring the smooth operation and safety of trailers across diverse industries. With [X years] of experience in the field, we have established ourselves as a trusted partner for individuals and businesses seeking reliable solutions for their trailer maintenance and repair needs.
+        </p>
+        <p>
+            Backed by a team of knowledgeable professionals, we are committed to providing expert guidance and support to our customers. Whether you're a seasoned mechanic or a first-time trailer owner, our friendly and experienced staff are here to assist you every step of the way, from product selection to installation and beyond
+        </p>
+        <div class="button-container">
+            <a href="/contact-us"><button class="button"><p>Contact Us</p></button></a>
+            <a href="/shop"><button class="button"><h1>Spare Parts</h1></button></a>
+        </div>
+    </div>
+    <div class="right">
+        <img src="Images/Personel.png">
+    </div>
+</section>
+
+
+<section class="personel">
+    <h3>At PanTrucks Ltd we have a dedicated team of personel ready to engage our clients with due professional deligence.</h3>
+        <% if (Members.length === 0) { %>
+            <p>No Members found.</p>
+        <% } else { %>
+            <div class="team-container card-container">
+            <% Members.forEach(member => { %>
+                <div class="member card">
+                    <img src="data:image/jpg;base64,<%= member.image.data.toString('base64') %>" alt="<%= member.name %>">
+                    <div class="details">
+                        <h4><%= member.name %></h4>
+                        <h4><%= member.title %></h4>
+                        <h4>+254 <%= member.phoneNumber %></h4>
+                    </div>
+                    </div>
+                    
+            <% }); %>
+        <% } %>
+    </div>
+</section>
+
+
+
+
+<section class="about-location">
+    <h3>Location</h3>
+    <div class="location-container">
+        <div class="left">
+            <h2>Physical Address: 122231 806</h2>
+            <h2>Street: Lumumba drive</h2>
+            <p>We are located in Nairobi, Roysambu on Lumumba drive near Quickmatt supermarket on block 14 7th street. View the precise location on the map provided</p>
+        </div>
+        <div class="right">
+            <img src="Images/map.png">
+    </div>
+    </div>
+</section>
+
+<script>window.addEventListener('beforeunload', function(event) {
+        console.log('Clearing session storage');
+        sessionStorage.removeItem('cartItems');
+    });</script><%-include('./partials/footer.ejs')%>

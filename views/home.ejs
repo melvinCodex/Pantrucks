@@ -1,0 +1,471 @@
+<%-include('./partials/header.ejs')%>
+
+
+<nav>
+    <div class="logo">
+        <img src="Images/navLogo.png">
+    </div>
+    <ul class="nav-links">
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="/about-us">About Us</a></li>
+     <li class="drop-down">
+            <a href="/categories">Categories</a>
+            <div class="categories-container pop-up-menu">
+                <ul>
+                    <% if (Category.length === 0) { %>
+                        <p>No categories found.</p>
+                    <% }  else { %>
+                        <% Category.forEach(category => { %>
+                                <li data-tag="<%=category.name%>">
+                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                    <h2><%= category.name %></h2>
+                                </li>
+                        <% }); %>
+                    <% } %>
+                    
+                </ul>
+            </div>
+        </li>
+        <li class="drop-down">
+            <a href="/services">Services</a>
+            <div class="service-container pop-up-menu">
+                <ul>
+                    <% if (Services.length === 0) { %>
+                        <p>No services found.</p>
+                    <% }  else { %>
+                        <% Services.forEach(category => { %>
+                                <li data-tag="<%=category.name%>">
+                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                    <h2><%= category.name %></h2>
+                                </li>
+                        <% }); %>
+                    <% } %>
+                </ul>
+            </div>
+        </li>
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/contact-us">Contact Us</a></li>
+    </ul>
+    <div class="search-bar">
+        <span class="icon"><img src="Images/search.png"></span>
+        <input type="search" placeholder=" Search through our collection">
+        <div class="search-parts-container">
+            <div class="card">
+                <img src="Images/chasis.png">
+                <h3>Named product</h3>
+            </div>
+            <% if (Products.length === 0) { %>
+                <p>No products found.</p>
+            <% } else { %>
+                <% Products.forEach(Product => { %>
+                    <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>">
+                        <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                        <h3><%= Product.name %></h3>
+                    </div>
+                <% }); %>
+            <% } %> 
+        </div>` 
+        </div>
+    <ul class="nav-icons">
+        <li><h3 class="cartCount"><%=cartProducts.length%></h3><a href="/cart"><img src="Images/cart.png" id="cart"></a></li>
+        <li id="open"><img src="Images/open.png"></li>
+        <li id="close"><img src="Images/close.png"></li>
+    </ul>
+</nav>
+
+    <section class="banner  top-banner">
+        <span class="back"><img src="Images/back.png"></span>
+        <div class="banner-tag">
+            <h1>Pan Tracks</h1>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis fugiat dolores iure impedit esse dolore cum tempore enim atque exercitationem Lorem ipsum, dolor sit amet consectetur adipisicing elit. Earum, iusto! voluptatum neque quas, nemo, nobis repellendus minima sapiente minus eius eos ipsam consectet Sequi, voluptates quaerat, laboriosam optio commodi alias facere aliquid explicabo adipisci cumque fugiat nesciunt repellat quia voluptatibus, obcaecati consequatur error.
+            </p>
+        </div>
+        <span class="forward"><img src="Images/forward.png"></span>
+    </section>
+
+
+
+    <section class="featured-products">
+        <h2>FEATURED PRODUCTS</h2>
+        <div class="container">
+            <aside class="left">
+                <h2>Available spare parts</h2>
+                <ul>
+                    <% if (Category.length === 0) { %>
+                        <p style="color: antiquewhite;">No categories found.</p>
+                    <% }  else { %>
+                        <% Category.forEach(category => { %>
+                                <li data-tag="<%=category.name%>"><span class="dot"></span><%= category.name %></li>
+                        <% }); %>
+                    <% } %>
+                </ul>
+            </aside>
+            <div class="right">
+                <div>
+                    <div class="card-container">
+                        <% if (featuredproducts.length === 0) { %>
+                            <p>No featured products found.</p>
+                        <% } else { %>
+                            <% featuredproducts = featuredproducts.filter(feature => {
+                                const matchingProduct = Products.find(product => product.name === feature.name);
+                                return matchingProduct;
+                            }).slice(0, 30); %>
+                    
+                            <% featuredproducts.forEach((feature, index) => { %>
+                                <% const matchingProduct = Products.find(product => product.name === feature.name); %>
+                                <% if (matchingProduct) { %>
+                                    <div class="card <%= index >= 8 ? 'none' : '' %>" data-tag="<%= matchingProduct.category %>">
+                                        <img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>">
+                                        <h2><%= matchingProduct.name %></h2>
+                                        <h3>Ksh <%= matchingProduct.price %> /-</h3>
+                                        <div class="button-container">
+                                            <button class="success" data-tag="<%= matchingProduct.name %>">Add to Cart</button>
+                                            <button class="danger">Details<span></span></button> 
+                                        </div>
+                                        <div class="rating">
+                                            <img src="Images/star.png">
+                                            <img src="Images/star.png">
+                                            <img src="Images/star.png">
+                                            <img src="Images/star.png">
+                                            <img src="Images/star.png">
+                                        </div>
+                                        <div class="cardDetails none">
+                                            <p>
+                                                Description: <%= matchingProduct.productDescription %>
+                                            </p>
+                                            <p>
+                                                <span>Country of Origin:</span> <%= matchingProduct.countryOfOrigin %>
+                                            </p>
+                                            <p>
+                                                <span>Part Number:</span> <%= matchingProduct.partNumber %>
+                                            </p>
+                                            <p>
+                                                <span>Manufacturer:</span> <%= matchingProduct.manufacturer %>
+                                            </p>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            <% }); %>
+                        <% } %>  
+                    </div>
+                    
+                 
+                </div>
+            </div>
+        </div>
+        <div class="discounted-items">
+                    <h2>Discounted products Available</h2>
+                    <div class="mini-card-container">
+                        <% if (discountedproducts.length === 0) { %>
+                            <p>No discounted products found.</p>
+                        <% }  else { %>
+            
+                            <% discountedproducts = discountedproducts.filter(discounted => {
+                                const matchingProduct = Products.find(product => product.name === discounted.name);
+                                return matchingProduct;
+                            }); %>
+    
+                            <% discountedproducts.forEach(discounted => { %>
+                                <% const matchingProduct = Products.find(product => product.name === discounted.name); %>
+                                    <div class="mini-card">
+                                        <% if (matchingProduct) { %>
+                                            <img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>">
+                                        <% } %>
+                                        <h3 class="warning">Was  : <span class="Was">Ksh <%= discounted.previousPrice %></span></h3>
+                                        <h3>Now : <span class="after">Ksh <%= discounted.currentPrice %></span></h3>
+                                    </div>
+                               
+                            <% }); %>
+                        <% } %>
+                    </div>
+        </div>
+    </section>
+
+
+
+    <section class="Shop-by-brand">
+        <h2>SHOP BY BRAND</h2>
+        <div class="brands mini-card-container">
+            <div data-tag="Mercedes" class="brand mini-card active">
+                <img src="Images/brand1.png">
+                <h3><span class="dot"></span>Mercedes</h3>
+            </div>
+            <div data-tag="Volka" class="brand mini-card">
+                <img src="Images/brand2.png">
+                <h3><span class="dot"></span>Volka</h3>
+            </div>
+            <div data-tag="TradeOn" class="brand mini-card">
+                <img src="Images/brand3.png">
+                <h3><span class="dot"></span>TradeOn</h3>
+            </div>
+            <div data-tag="Ramses" class="brand mini-card">
+                <img src="Images/brand4.png">
+                <h3><span class="dot"></span>Ramses</h3>
+            </div>
+            <div data-tag="Pegeot" class="brand mini-card">
+                <img src="Images/brand5.png">
+                <h3><span class="dot"></span>Pegeot</h3>
+            </div>
+            <div data-tag="Tesla" class="brand mini-card">
+                <img src="Images/brand6.png">
+                <h3><span class="dot"></span>Tesla</h3>
+            </div>
+        </div>
+        <div class="card-container">
+            <% if (Object.values(Products).filter(product => product.brand !== undefined).length === 0) { %>
+                <p>No new branded products found.</p>
+            <% } else { %>
+                <% Object.values(Products).filter(product => product.brand !== undefined).slice(0, 50).forEach((choice, index) => { %>
+                    <% const matchingProduct = Products.find(product => product.name === choice.name); %>
+                    <% if (matchingProduct) { %>
+                        <div class="card <%= index >= 12 ? 'none' : '' %>" data-category="<%= matchingProduct.category %>" data-brand="<%= matchingProduct.brand %>">
+                            <img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>">
+                            <h2><%= matchingProduct.name %></h2>
+                            <h3>Ksh <%= matchingProduct.price %> /-</h3>
+                            <div class="button-container">
+                                <button class="success" data-tag="<%= matchingProduct.name %>">Add to Cart</button>
+                                <button class="danger">Details<span></span></button>
+                            </div>
+                            <div class="rating">
+                                <img src="Images/star.png">
+                                <img src="Images/star.png">
+                                <img src="Images/star.png">
+                                <img src="Images/star.png">
+                                <img src="Images/star.png">
+                            </div>
+                            <div class="cardDetails none">
+                                <p>
+                                    Description: <%= matchingProduct.productDescription %>
+                                </p>
+                                <p>
+                                    <span>Country of Origin:</span> <%= matchingProduct.countryOfOrigin %>
+                                </p>
+                                <p>
+                                    <span>Part Number:</span> <%= matchingProduct.partNumber %>
+                                </p>
+                                <p>
+                                    <span>Manufacturer:</span> <%= matchingProduct.manufacturer %>
+                                </p>
+                            </div>
+                        </div>
+                    <% } %>
+                <% }); %>
+            <% } %>
+        </div>
+        
+    </div>
+    </section>
+
+
+
+    <section class="categories">
+        <h2>AVAILABLE PARTS CATEGORIES</h2>
+        <div class="container">
+            <aside>
+                <h3>Categories</h3>
+                <ul>
+                    <% if (Category.length === 0) { %>
+                        <p style="color: antiquewhite;">No categories found.</p>
+                    <% }  else { %>
+                        <% Category.forEach(category => { %>
+                                <li data-tag="<%=category.name%>"><span class="dot"></span><%= category.name %></li>
+                        <% }); %>
+                    <% } %>
+                </ul>
+            </aside>
+            <div class="main-section">
+                <div class="card-container">
+                    <% if (Object.values(Products).filter(product => product.category !== undefined).length === 0) { %>
+                        <p>No products found.</p>
+                    <% } else { %>
+                        <% Object.values(Products).filter(product => product.category !== undefined).slice(0, 30).forEach((choice, index) => { %>
+                            <% const matchingProduct = Products.find(product => product.name === choice.name); %>
+                            <% if (matchingProduct) { %>
+                                <div class="card <%= index >= 8 ? 'none' : '' %>" data-category="<%= matchingProduct.category %>" data-brand="<%= matchingProduct.brand %>">
+                                    <img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>">
+                                    <h2><%= matchingProduct.name %></h2>
+                                    <h3>Ksh <%= matchingProduct.price %> /-</h3>
+                                    <div class="button-container">
+                                        <button class="success" data-tag="<%= matchingProduct.name %>">Add to Cart</button>
+                                        <button class="danger">Details<span></span></button>
+                                    </div>
+                                    <div class="rating">
+                                        <img src="Images/star.png">
+                                        <img src="Images/star.png">
+                                        <img src="Images/star.png">
+                                        <img src="Images/star.png">
+                                        <img src="Images/star.png">
+                                    </div>
+                                    <div class="cardDetails none">
+                                        <p>
+                                            Description: <%= matchingProduct.productDescription %>
+                                        </p>
+                                        <p>
+                                            <span>Country of Origin:</span> <%= matchingProduct.countryOfOrigin %>
+                                        </p>
+                                        <p>
+                                            <span>Part Number:</span> <%= matchingProduct.partNumber %>
+                                        </p>
+                                        <p>
+                                            <span>Manufacturer:</span> <%= matchingProduct.manufacturer %>
+                                        </p>
+                                    </div>
+                                </div>
+                            <% } %>
+                        <% }); %>
+                    <% } %>
+                </div>
+                
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="customer-reviews">
+        <h2>CUSTOMER REVIEWS</h2>
+        <div class="card-container">
+            <div class="review card1">
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+                <h4>Name of Person</h4>
+                <div class="rating">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                </div>
+            </div>
+            <div class="review card2">
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+                <h4>Name of Person</h4>
+                <div class="rating">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                </div>
+            </div>
+            <div class="review card3">
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+                <h4>Name of Person</h4>
+                <div class="rating">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                </div>
+            </div>
+            <div class="review card4">
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+                <h4>Name of Person</h4>
+                <div class="rating">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                </div>
+            </div>
+            <div class="review card5">
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+                <h4>Name of Person</h4>
+                <div class="rating">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+<script>
+       
+const addToCartButtons = document.querySelectorAll('.card .success');
+let cartItemsArray = sessionStorage.getItem('cartItems');
+
+// If cartItemsArray is null (i.e., no items in sessionStorage), initialize it as an empty array
+if (!cartItemsArray) {
+    cartItemsArray = [];
+} else {
+  
+    cartItemsArray = JSON.parse(cartItemsArray);
+}
+
+addToCartButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        let productName = button.dataset.tag;
+        cartItemsArray.push(productName);
+        
+      
+        const uniqueItemsSet = new Set(cartItemsArray);
+        cartItemsArray = Array.from(uniqueItemsSet); 
+
+        console.log('Cart Items Array:', cartItemsArray);
+        sessionStorage.setItem('cartItems', JSON.stringify(cartItemsArray));
+    
+        fetch('/cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(cartItemsArray) 
+        })
+        .then(response => response.json())
+        .then(data => {
+            sessionStorage.setItem('cartNum', data);
+            document.querySelector('.cartCount').innerHTML = data;
+        })
+        .catch(error => {
+            console.error('Error sending cart items:', error);
+        });
+    });
+});
+
+const detailsButtons = document.querySelectorAll('.card .danger');
+const detailsCards = document.querySelectorAll('.cardDetails')
+
+
+
+function removeDetails(exceptElement = null) {
+    document.querySelectorAll('.cardDetails').forEach(details => {
+        if (details !== exceptElement) {
+            details.classList.add('none');
+        }
+    });
+}
+
+
+detailsButtons.forEach(button => {
+  
+    button.addEventListener('click', () => {
+       
+        let cardDetails = button.closest('.card').querySelector('.cardDetails');
+        
+        
+        if (cardDetails.classList.contains('none')) {
+            removeDetails(cardDetails); 
+            cardDetails.classList.remove('none'); 
+        } else {
+            cardDetails.classList.add('none'); 
+        }
+    });
+});
+
+
+</script>
+        
+<script>
+        window.addEventListener('beforeunload', function(event) {
+        console.log('Clearing session storage');
+        sessionStorage.removeItem('cartItems');
+    });
+</script>
+<%-include('./partials/footer.ejs')%>

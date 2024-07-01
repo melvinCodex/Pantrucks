@@ -1,0 +1,92 @@
+<%-include('./partials/header.ejs')%>
+
+<nav>
+    <div class="logo">
+        <img src="Images/navLogo.png">
+    </div>
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about-us">About Us</a></li>
+        <li class="drop-down">
+            <a href="/categories">Categories</a>
+            <div class="categories-container pop-up-menu">
+                <ul>
+                    <% if (Category.length === 0) { %>
+                        <p>No categories found.</p>
+                    <% }  else { %>
+                        <% Category.forEach(category => { %>
+                                <li data-tag="<%=category.name%>">
+                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                    <h2><%= category.name %></h2>
+                                </li>
+                        <% }); %>
+                    <% } %>
+                    
+                </ul>
+            </div>
+        </li>
+        <li class="drop-down">
+            <a href="/services">Services</a>
+            <div class="service-container pop-up-menu">
+                <ul>
+                    <% if (Services.length === 0) { %>
+                        <p>No services found.</p>
+                    <% }  else { %>
+                        <% Services.forEach(category => { %>
+                                <li data-tag="<%=category.name%>">
+                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                    <h2><%= category.name %></h2>
+                                </li>
+                        <% }); %>
+                    <% } %>
+                </ul>
+            </div>
+        </li>
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/contact-us">Contact Us</a></li>
+    </ul>
+    <div class="search-bar">
+        <span class="icon"><img src="Images/search.png"></span>
+        <input type="search" placeholder=" Search through our collection">
+        <div class="search-parts-container">
+            <% if (Products.length === 0) { %>
+                <p>No products found.</p>
+            <% } else { %>
+                <% Products.forEach(Product => { %>
+                    <a href="/details/<%=Product.i_d%>">
+                        <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>">
+                            <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                            <h3><%= Product.name %></h3>
+                        </div>
+                    </a>
+                <% }); %>
+            <% } %>  
+        </div>
+    </div>
+    
+    <ul class="nav-icons">
+        <li><h3 class="cartCount"><%=cartProducts.length%></h3><a href="/cart"><img src="Images/cart.png" id="cart"></a></li>
+        <li id="open"><img src="Images/open.png"></li>
+        <li id="close"><img src="Images/close.png"></li>
+    </ul>
+</nav>
+
+
+<section class="log-in top-banner">
+    <h3>Admin log in Panel</h3>
+    <form action="/login" method="post">
+        <ul>
+            <li><label for="UserName">UserName:</label><input type="text" name="username" placeholder="UserName" required></li>
+            <li><label for="Email">Email:</label><input type="email" name="email" placeholder="Email" required></li>
+            <li><label for="Password">Password:</label><input type="password" name="password" placeholder="Password" required></li>
+        </ul>
+        <button class="check-out">Submit</button>
+    </form>
+</section>
+
+
+
+<script>window.addEventListener('beforeunload', function(event) {
+        console.log('Clearing session storage');
+        sessionStorage.removeItem('cartItems');
+    });</script><%-include('./partials/footer.ejs')%>

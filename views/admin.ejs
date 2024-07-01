@@ -1,0 +1,525 @@
+<%-include('./partials/header.ejs')%>
+
+<nav>
+    <div class="logo">
+        <img src="Images/navLogo.png">
+    </div>
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about-us">About Us</a></li>
+        <li class="drop-down">
+            <a href="/categories">Categories</a>
+            <div class="categories-container pop-up-menu">
+                <ul>
+                    <% if (Category.length === 0) { %>
+                        <p>No categories found.</p>
+                    <% }  else { %>
+                        <% Category.forEach(category => { %>
+                                <li data-tag="<%=category.name%>">
+                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                    <h2><%= category.name %></h2>
+                                </li>
+                        <% }); %>
+                    <% } %>
+                    
+                </ul>
+            </div>
+        </li>
+        <li class="drop-down">
+            <a href="/services">Services</a>
+            <div class="service-container pop-up-menu">
+                <ul>
+                    <% if (Services.length === 0) { %>
+                        <p>No services found.</p>
+                    <% }  else { %>
+                        <% Services.forEach(category => { %>
+                                <li data-tag="<%=category.name%>">
+                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                    <h2><%= category.name %></h2>
+                                </li>
+                        <% }); %>
+                    <% } %>
+                </ul>
+            </div>
+        </li>
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/contact-us">Contact Us</a></li>
+    </ul>
+    <div class="search-bar">
+        <span class="icon"><img src="Images/search.png"></span>
+        <input type="search" placeholder=" Search through our collection">
+        <div class="search-parts-container">
+            <% if (Products.length === 0) { %>
+                <p>No products found.</p>
+            <% } else { %>
+                <% Products.forEach(Product => { %>
+                    <a href="/details/<%=Product.i_d%>">
+                        <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>">
+                            <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                            <h3><%= Product.name %></h3>
+                        </div>
+                    </a>
+                <% }); %>
+            <% } %>  
+        </div>
+    </div>
+    
+    <ul class="nav-icons">
+        <li><h3 class="cartCount"><%=cartProducts.length%></h3><a href="/cart"><img src="Images/cart.png" id="cart"></a></li>
+        <li id="open"><img src="Images/open.png"></li>
+        <li id="close"><img src="Images/close.png"></li>
+    </ul>
+</nav>
+
+<div class="main top-banner">
+    <ul>
+        <li>
+            <section class="analytics">
+                <h3>Visits</h3>
+                <ul>
+                    <li><h3>Today :</h3> <span>+<%= visitsTodayCount %></span></li>
+                    <li><h3>Last 7 days:</h3> <span>+<%= visitsLast7DaysCount %></span></li>
+                    <li><h3>Last month : </h3><span>+<%= visitsLastMonthCount %></span></li>
+                </ul>
+            </section>
+        </li>
+
+
+        <li class="cart">
+            <section class="messages">
+                <table class="cp">
+                    <h3>Recent messages</h3>
+                    <thead>
+                        <tr>
+                            <th>First name</th>
+                            <th>Last name</th>
+                            <th>Phone number</th>
+                            <th>Email Address</th>
+                            <th>Subject</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (messages.length === 0) { %>
+                            <p>No messages yet.</p>
+                        <% } else { %>
+                            <% 
+                                
+                                messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                      
+                                const recentMessages = messages.reverse().slice(0, 10); 
+                            %>
+                            <% recentMessages.forEach(message => { %>
+                                <tr>
+                                    <td><%= message.firstUserName %></td>
+                                    <td><%= message.lastUserName %></td>
+                                    <td><%= message.mobileNumber %></td>
+                                    <td><%= message.email %></td>
+                                    <td><%= message.subject %></td>
+                                    <td><%= message.text %></td>
+                                </tr>
+                            <% }); %>
+                        <% } %>
+                    </tbody>
+                    
+                    
+                </table>
+            </section>
+        </li>
+        <li>
+            <section class="Cart orderedCarts">
+                <h3>Requested Products with Customer details</h3>
+                <% if (carts.length > 0) { %>
+                    <% carts.reverse().slice(0,10).forEach(cart => { %>
+                        <div class="cart">
+                            <h2>User ID: <%= cart.userId %></h2>
+                            <p>User Name: <%= cart.firstUserName %> <%= cart.lastUserName %></p>
+                            <p>Mobile number: <%= cart.mobileNumber %></p>
+                            <p>Email: <%= cart.email %></p>
+                            <table class="cp">
+                                <thead>
+                                    <tr>
+                                        <th class="product-image">Image</th>
+                                        <th>Product</th>
+                                        <th class="Description">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% cart.items.forEach(item => { %>
+                                        <% const matchingProduct = Products.find(product => product.name === item.name); %>
+                                        <% if (matchingProduct) { %>
+                                            <tr>
+                                                <td class="product-image"><img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>"></td>
+                                                <td><h2 class="productName"><%= matchingProduct.name %></h2></td>
+                                                <td class="Description"><p><%= matchingProduct.productDescription %></p></td>
+                                            </tr>
+                                        <% } %>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% }); %>
+                <% } %>
+            </section>
+            
+        </li>
+
+       <li class="serve">
+            <section>
+                <form class="form formService" action="/addService" method="post">
+                    <h3>Add new Services here</h3>
+                    <ul>
+                        <li>
+                            <label for="image">Image</label>
+                            <input type="file" required name="image" accept="image/*">
+                        </li>
+                        <li>
+                            <label for="image1">Image</label>
+                            <input type="file" required name="image1" accept="image/*">
+                        </li>
+                        <li >
+                            <label for="name"></label>
+                            <input type="text" name="name" required placeholder="Enter Service Name">
+                        </li>
+                        <li>
+                            <label for="overview"></label>
+                            <textarea name="overview" placeholder="Enter service overview"></textarea>
+                        </li>
+                        <li>
+                            <label for="details"></label>
+                            <textarea name="details" placeholder="Enter service details"></textarea>
+                        </li>
+        
+                    </ul>
+                    <button type="submit">Submit</button>
+                </form>
+            </section>
+       </li>
+
+       <li class="serve">
+            <section>
+                <form class="form formService formCategory" action="/addCategory" method="post">
+                    <h3>Add new Categories here</h3>
+                    <ul>
+                        <li>
+                            <label for="image">Image</label>
+                            <input type="file" required name="image" accept="image/*">
+                        </li>
+                        <li >
+                            <label for="name"></label>
+                            <input type="text" name="name" required placeholder="Enter Category Name">
+                        </li>
+                        <li>
+                            <label for="details"></label>
+                            <textarea name="details" placeholder="Enter Category details"></textarea>
+                        </li>
+        
+                    </ul>
+                    <button type="submit">Submit</button>
+                </form>
+            </section>
+       </li>
+
+        <li>
+            <section class="team-edit personel">
+                <button>Add Member</button>
+                <form class="form form1 none" action="/addPerson" method="post">
+                    <ul>
+                        <li >
+                            <label for="name"></label>
+                            <input type="text" name="name" required placeholder="Enter Name">
+                        </li>
+                        <li>
+                            <label for="title"></label>
+                            <input type="text" name="title" required placeholder="Enter Title">
+                        </li>
+                        <li>
+                            <label for="email"></label>
+                            <input type="email" name="email" required placeholder="Enter Email">
+                        </li>
+                        <li>
+                            <label for="phoneN"></label>
+                            <input type="number" name="phoneNumber" required placeholder="Enter Phone Number">
+                        </li>
+                        <li>
+                            <label for="image">Image</label>
+                            <input type="file" required name="image" accept="image/*">
+                        </li>
+
+                    </ul>
+                    <button type="submit">Submit</button>
+                </form>
+                <div class="team-container card-container">
+                    <% if (Members.length === 0) { %>
+                        <p>No Members found.</p>
+                    <% } else { %>
+                        
+                        <% Members.forEach(member => { %>
+                            <div class="member card" data-unique="<%=member._id%>">
+                                <img src="data:image/jpg;base64,<%= member.image.data.toString('base64') %>" alt="<%= member.name %>">
+                                <div class="details">
+                                    <h4><%= member.name %></h4>
+                                    <h4><%= member.title %></h4>
+                                    <h4>+254 <%= member.phoneNumber %></h4>
+                                </div>
+                                <div class="button-container">
+                                    <button class="warning">Delete</button>
+                                </div>
+                            </div>
+                                
+                        <% }); %>
+                    <% } %>
+                </div>
+            </section>
+        </li>
+
+        <li>
+            <section class="features-edit normal">
+                <h3>Featured products edit</h3>
+                <button>Add</button>
+                <form class="form form2 none" action="/add-featured" method="post">
+                    <ul>
+                        <li class="name">
+                            <label for="name"></label>
+                            <input type="text" name="name" required placeholder="Enter Name">
+                        </li>
+                    </ul>
+                    <button type="submit">Submit</button>
+                    <div class="product-gallery none">
+                        <% if (Products.length === 0) { %>
+                            <p>No products found.</p>
+                        <% } else { %>
+                            <% Products.forEach(Product => { %>
+                                <div class="product card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>" data-unique="<%=Product._id%>">
+                                    <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                                    <h3><%= Product.name %></h3>
+                                </div>
+                            <% }); %>
+                        <% } %>   
+                    </div>
+                </form>
+                <div class="card-container">
+                    <% if (featuredproducts.length === 0) { %>
+                        <p>No featured products found.</p>
+                    <% }  else { %>
+        
+                        <% featuredproducts = featuredproducts.filter(feature => {
+                            const matchingProduct = Products.find(product => product.name === feature.name);
+                            return matchingProduct;
+                        }); %>
+
+                        <% featuredproducts.forEach(feature => { %>
+                            <% const matchingProduct = Products.find(product => product.name === feature.name); %>
+                                <div class="card" data-unique="<%=feature._id%>">
+                                    <% if (matchingProduct) { %>
+                                        <img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>">
+                                    <% } %>
+                                    <h2><%= matchingProduct.name %></h2>
+                                    <h3>Ksh <%= matchingProduct.price %> /-</h3>
+                                    <div class="button-container">
+                                       
+                                        <button class="danger">Delete<span></span></button>
+                                    </div>
+                                </div>
+                           
+                        <% }); %>
+                    <% } %>
+                </div>
+            </section>
+        </li>
+
+        <li>
+            <section class="discounted-edit normal">
+            <h3>Discounted Products edit</h3>
+            <button>Add</button>
+            <form class="form form3 none" action="/add-discounted-product" method="post">
+                <ul>
+                    <li class="name">
+                        <label for="name"></label>
+                        <input type="text" name="name" required placeholder="Enter Name">
+                    </li>
+                    <li>
+                        <label for="previousPrice"></label>
+                        <input type="number" name="previousPrice" required placeholder="Enter previous-price">
+                    </li>
+                    <li>
+                        <label for="currentPrice"></label>
+                        <input type="number" name="currentPrice" required placeholder="Enter Current Price">
+                    </li>
+
+                </ul>
+                <button type="submit">Submit</button>
+                <div class="product-gallery none">
+                    
+                    <% if (Products.length === 0) { %>
+                        <p>No products found.</p>
+                    <% } else { %>
+                        <% Products.forEach(Product => { %>
+                            <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>" data-unique="<%=Product._id%>">
+                                <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                                <h3><%= Product.name %></h3>
+                            </div>
+                        <% }); %>
+                    <% } %>   
+                </div>
+            </form>
+            <div class="card-container">
+                    <% if (discountedproducts.length === 0) { %>
+                        <p>No discounted products found.</p>
+                    <% }  else { %>
+        
+                        <% discountedproducts = discountedproducts.filter(discounted => {
+                            const matchingProduct = Products.find(product => product.name === discounted.name);
+                            return matchingProduct;
+                        }); %>
+
+                        <% discountedproducts.forEach(discounted => { %>
+                            <% const matchingProduct = Products.find(product => product.name === discounted.name); %>
+                                <div class="card" data-unique="<%=discounted._id%>">
+                                    <% if (matchingProduct) { %>
+                                        <img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>">
+                                    <% } %>
+                                    <h3 class="warning">Was  : <span class="Was">Ksh <%= discounted.previousPrice %></span></h3>
+                                    <h3>Now : <span class="after">Ksh <%= discounted.currentPrice %></span></h3>
+                                    <div class="button-container">
+                                       
+                                        <button class="danger">Delete<span></span></button>
+                                    </div>
+                                </div>
+                        <% }); %>
+                    <% } %>
+                </div>
+            </div>
+            </section>
+        </li>
+
+        <li>
+            <section class="Products-edit normal">
+                <h3>Products Edit</h3>
+                <button>Add New Product</button>
+                <form class="form form4 none" id="productForm" action="/upload-product" enctype="multipart/form-data">
+                    <label for="image">Image</label>
+                    <input type="file" required name="image" accept="image/*">
+                    <label for="name"></label>
+                    <input type="text" required name="name" placeholder="Enter product Name">
+                    <label for="part-number"></label>
+                    <input type="text" required name="partNumber" placeholder="Enter part number">
+                    <label for="manufacturer"></label>
+                    <input type="text" required name="manufacturer" placeholder="Enter product manufacturer">
+                    <label for="price"></label>
+                    <input type="number" required name="price" placeholder="Enter product Price">
+                    <label for="brand"></label>
+                    <input type="text" required name="brand" placeholder="Enter product Brand">
+                    <label for="category"></label>
+                    <input type="text" required name="category" placeholder="Enter product Category">
+                    <label for="county-of-origin"></label>
+                    <input type="text" required name="countryOfOrigin" placeholder="county-of-origin">
+                    <label for="productDescription"></label>
+                    <textarea name="productDescription" placeholder="Enter product description"></textarea>
+                    <label for="productDetails"></label>
+                    <textarea name="productDetails" placeholder="Enter product details"></textarea>
+                    <button type="submit" type="submit">Submit</button>
+                </form>
+                <div class="card-container">
+                    <% if (Products.length === 0) { %>
+                        <p>No products found.</p>
+                    <% } else { %>
+                        <% Products.forEach(Product => { %>
+                            <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>" data-unique="<%=Product._id%>">
+                                <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                                <h2><%= Product.name %></h2>
+                                <h3>Ksh <%= Product.price %> /-</h3>
+                                <div class="button-container">
+                                   
+                                    <button class="danger">Delete<span></span></button>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } %>        
+                </div>
+            </section>
+        </li>
+
+
+        <li>
+            
+    <section class="customer-reviews">
+        <h2>CUSTOMER REVIEWS</h2>
+        <div class="card-container">
+            <div class="review card1">
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+                <h4>Name of Person</h4>
+                <div class="rating">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                </div>
+                <button>Delete</button>
+            </div>
+            <div class="review card2">
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+                <h4>Name of Person</h4>
+                <div class="rating">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                </div>
+                <button>Delete</button>
+            </div>
+            <div class="review card3">
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+                <h4>Name of Person</h4>
+                <div class="rating">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                </div>
+                <button>Delete</button>
+            </div>
+            <div class="review card4">
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+                <h4>Name of Person</h4>
+                <div class="rating">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                </div>
+                <button>Delete</button>
+            </div>
+            <div class="review card5">
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
+                <h4>Name of Person</h4>
+                <div class="rating">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                    <img src="Images/star.png">
+                </div>
+                <button>Delete</button>
+            </div>
+        </div>
+    </section>
+        </li>
+    </ul>
+</div>
+
+<style>
+    .button-container button{
+        width: 100%;
+    }
+</style>
+
+<script>window.addEventListener('beforeunload', function(event) {
+        console.log('Clearing session storage');
+        sessionStorage.removeItem('cartItems');
+    });</script><%-include('./partials/footer.ejs')%>
+

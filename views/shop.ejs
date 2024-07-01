@@ -1,0 +1,172 @@
+<%-include('./partials/header.ejs')%>
+
+
+<nav>
+    <div class="logo">
+        <img src="Images/navLogo.png">
+    </div>
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about-us">About Us</a></li>
+        <li class="drop-down">
+            <a href="/categories">Categories</a>
+            <div class="categories-container pop-up-menu">
+                <ul>
+                    <% if (Category.length === 0) { %>
+                        <p>No categories found.</p>
+                    <% }  else { %>
+                        <% Category.forEach(category => { %>
+                                <li data-tag="<%=category.name%>">
+                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                    <h2><%= category.name %></h2>
+                                </li>
+                        <% }); %>
+                    <% } %>
+                    
+                </ul>
+            </div>
+        </li>
+        <li class="drop-down">
+            <a href="/services">Services</a>
+            <div class="service-container pop-up-menu">
+                <ul>
+                    <% if (Services.length === 0) { %>
+                        <p>No services found.</p>
+                    <% }  else { %>
+                        <% Services.forEach(category => { %>
+                                <li data-tag="<%=category.name%>">
+                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
+                                    <h2><%= category.name %></h2>
+                                </li>
+                        <% }); %>
+                    <% } %>
+                </ul>
+            </div>
+        </li>
+        <li><a class="active" href="/shop">Shop</a></li>
+        <li><a href="/contact-us">Contact Us</a></li>
+    </ul>
+    <div class="search-bar">
+        <span class="icon"><img src="Images/search.png"></span>
+        <input type="search" placeholder=" Search through our collection">
+        <div class="search-parts-container">
+            <% if (Products.length === 0) { %>
+                <p>No products found.</p>
+            <% } else { %>
+                <% Products.forEach(Product => { %>
+                    <a href="/details/<%=Product.i_d%>">
+                        <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>">
+                            <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                            <h3><%= Product.name %></h3>
+                        </div>
+                    </a>
+                <% }); %>
+            <% } %>  
+        </div>
+    </div>
+    <ul class="nav-icons">
+        <li><h3 class="cartCount"><%=cartProducts.length%></h3><a href="/cart"><img src="Images/cart.png" id="cart"></a></li>
+        <li id="open"><img src="Images/open.png"></li>
+        <li id="close"><img src="Images/close.png"></li>
+    </ul>
+</nav>
+
+<section class="tools top-banner">
+    <div class="tool-brands">
+        <h3>Brands</h3>
+        <ul>
+            <li class="active">All</li>
+            <li>Mercedes</li>
+            <li>Tesla</li>
+            <li>Volka</li>
+            <li>Pegeot</li>
+            <li>Ramses</li>
+        </ul>
+    </div>
+    <div class="tool-search">
+        <img src="Images/search.png">
+        <input type="text" placeholder="Search through thousands of products">
+    </div>
+    <div class="tool-category">
+        <h3>Categories</h3>
+        <ul>
+            <li class="active">All</li>
+            <li>Body Works</li>
+            <li>Engine</li>
+            <li>Brakes</li>
+            <li>Hydraulics</li>
+            <li>Accesories</li>
+        </ul>
+    </div>
+</section>
+
+
+<section class="parts">
+    <h5>Page <%= currentPage %> / <%= totalPages %></h5>
+    <div class="card-container">
+        <% if (Products.length === 0) { %>
+            <p>No products found.</p>
+        <% } else { %>
+            <% products.forEach(Product => { %>
+                <div class="card" data-category="<%= Product.category %>" data-brand="<%= Product.brand %>">
+                    <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                    <h2><%= Product.name %></h2>
+                    <h3>Ksh <%= Product.price %> /-</h3>
+                    <div class="button-container">
+                        <button class="success" data-tag="<%= Product.name %>">Add to Cart</button>
+                        <button class="danger">Details<span></span></button> 
+                        
+                    </div>
+                    <div class="rating">
+                        <img src="Images/star.png">
+                        <img src="Images/star.png">
+                        <img src="Images/star.png">
+                        <img src="Images/star.png">
+                        <img src="Images/star.png">
+                    </div>
+                    <div class="cardDetails none">
+                        <p>
+                            Description: <%= Product.productDescription %>
+                        </p>
+                        <p>
+                            <span >Country of Origin:</span> <%= Product.countryOfOrigin %>
+                        </p>
+                        <p>
+                            <span >Part Number:</span> <%= Product.partNumber %>
+                        </p>
+                        <p>
+                            <span >Manufacturer:</span> <%= Product.manufacturer %>
+                        </p>
+                    </div>
+                </div>
+            <% }); %>
+        <% } %>        
+    </div>
+    <div class="loading none" style=" position: relative; left: 14rem; width: 20%; padding: 2rem; background: rgba(173, 173, 173, 0);">
+        <img src="Images/loading.gif" alt="Loading...">
+    </div>
+    <div class="navigators">
+        <% if (currentPage > 1) { %>
+            <span class="back" data-page="<%= currentPage - 1 %>"><img src="Images/back.png"></span>
+        <% } %>
+        <% if (currentPage < totalPages) { %>
+            <span class="forward" data-page="<%= currentPage + 1 %>"><img src="Images/forward.png"></span>
+        <% } %>
+    </div>
+</section>
+
+
+<script>
+
+
+</script>
+
+
+
+<script>window.addEventListener('beforeunload', function(event) {
+        console.log('Clearing session storage');
+        sessionStorage.removeItem('cartItems');
+    });
+</script>
+
+<%-include('./partials/footer.ejs')%>
