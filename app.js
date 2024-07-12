@@ -16,7 +16,8 @@ mongoose.connect( "mongodb+srv://melvin:pantrucks@pantrucks.vsy6tgt.mongodb.net/
 });
 
 //set app to listen on port address
-app.listen(4000, ( ()=> {
+const port = process.env.PORT || 4000;
+app.listen(port, ( ()=> {
     console.log('listening');
 }));
 
