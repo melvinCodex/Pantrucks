@@ -12,15 +12,14 @@
                 <ul>
                     <% if (Category.length === 0) { %>
                         <p>No categories found.</p>
-                    <% }  else { %>
+                    <% } else { %>
                         <% Category.forEach(category => { %>
-                                <li data-tag="<%=category.name%>">
-                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
-                                    <h2><%= category.name %></h2>
-                                </li>
+                            <li data-tag="<%= category.name %>">
+                                <img src="/uploads/<%= category.image %>" alt="<%= category.name %>">
+                                <h2><%= category.name %></h2>
+                            </li>
                         <% }); %>
                     <% } %>
-                    
                 </ul>
             </div>
         </li>
@@ -30,18 +29,19 @@
                 <ul>
                     <% if (Services.length === 0) { %>
                         <p>No services found.</p>
-                    <% }  else { %>
-                        <% Services.forEach(category => { %>
-                                <li data-tag="<%=category.name%>">
-                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
-                                    <h2><%= category.name %></h2>
-                                </li>
+                    <% } else { %>
+                        <% Services.forEach(service => { %>
+                            <li data-tag="<%= service.name %>">
+                                <img src="/uploads/<%= service.image %>" alt="<%= service.name %>">
+                                <h2><%= service.name %></h2>
+                            </li>
                         <% }); %>
                     <% } %>
                 </ul>
             </div>
         </li>
-        <li><a href="/shop">Shop</a></li>
+        
+        <li><a class="active" href="/shop">Shop</a></li>
         <li><a href="/contact-us">Contact Us</a></li>
     </ul>
     <div class="search-bar">
@@ -52,9 +52,9 @@
                 <p>No products found.</p>
             <% } else { %>
                 <% Products.forEach(Product => { %>
-                    <a href="/details/<%=Product.i_d%>">
-                        <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>">
-                            <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                    <a href="/details/<%= Product.i_d %>">
+                        <div class="card" data-category="<%= Product.category %>" data-brand="<%= Product.brand %>">
+                            <img src="/uploads/<%= Product.image %>" alt="<%= Product.name %>">
                             <h3><%= Product.name %></h3>
                         </div>
                     </a>

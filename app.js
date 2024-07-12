@@ -23,9 +23,49 @@ app.listen(4000, ( ()=> {
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+// Disk storage
+const storageFile = multer.diskStorage({
+  destination: './uploads/',
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
+
+// Initialize upload for single file
+const uploadFile = multer({
+  storage: storageFile,
+  limits: { fileSize: 5000000 },
+  fileFilter: (req, file, cb) => {
+    checkFileType(file, cb);
+  }
+}).single('image');
+
+// Initialize upload for multiple files
+const uploadService = multer({
+  storage: storageFile,
+  limits: { fileSize: 5000000 },
+  fileFilter: (req, file, cb) => {
+    checkFileType(file, cb);
+  }
+}).fields([{ name: 'image', maxCount: 1 }, { name: 'image1', maxCount: 1 }]);
+
+// Check file type
+function checkFileType(file, cb) {
+  const filetypes = /jpeg|jpg|png|gif/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb('Error: Images Only!');
+  }
+}
+
 const productSchema = new mongoose.Schema({
     image: {
-        data: Buffer,
+        type: String, 
+        required: true
     },
     name: {
         type: String, 
@@ -128,7 +168,8 @@ const reviewsSchema = new mongoose.Schema({
 
 const categorySchema = new mongoose.Schema({
     image: {
-        data: Buffer,
+        type: String,
+        required: true
     },
     name: {
         type: String,
@@ -142,10 +183,12 @@ const categorySchema = new mongoose.Schema({
 
 const servicesSchema = new mongoose.Schema({
     image: {
-        data: Buffer,
+        type: String,
+        required: true
     },
     image1: {
-        data: Buffer,
+        type: String,
+        required: true
     },
     name: {
         type: String,
@@ -327,7 +370,7 @@ const message = mongoose.model('message', messageSchema);
 //setup ejs templating engine
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 //provide access to public folder
 app.use(express.static('public'));
@@ -357,59 +400,53 @@ app.post('/category', async (req, res) => {
     }
 });
 
-app.post('/addservice', upload.fields([{ name: 'image' }, { name: 'image1' }]), async (req, res) => {
-    try {
-        const { buffer: imageBuffer } = req.files['image'][0];
-        const { buffer: image1Buffer } = req.files['image1'][0];
+app.post('/addservice', (req, res) => {
+    uploadService(req, res, async (err) => {
+      try {
+        if (err) {
+          return res.status(400).json({ message: err });
+        }
+        if (!req.files || Object.keys(req.files).length === 0) {
+          return res.status(400).json({ message: 'No files uploaded' });
+        }
+  
         const { name, overview, details } = req.body;
-
+  
+        // Save the file paths to the database
         const Service = new services({
-            image: {
-                data: imageBuffer,
-                contentType: 'image/jpg',
-            },
-            image1: {
-                data: image1Buffer,
-                contentType: 'image/jpg',
-            },
-            name,
-            overview,
-            details
+          image: req.files['image'][0].path,
+          image1: req.files['image1'][0].path,
+          name,
+          overview,
+          details
         });
-
+  
         await Service.save();
-        res.status(201).json({ sent: 'uploaded successfully'});
-    } catch (error) {
+        res.status(201).json({ message: 'Uploaded successfully' });
+      } catch (error) {
         console.error(error);
-        res.status(500).json({ sent: 'failed to upload'});
+        res.status(500).json({ message: 'Failed to upload' });
+      }
+    });
+  });
+  
+  // Route to add category
+  app.post('/addCategory', uploadFile, async (req, res) => {
+    if (req.file === undefined) {
+      res.status(400).send({ message: 'No file selected' });
+    } else {
+      const { name, details } = req.body;
+      const Category = new category({
+        image: `/uploads/${req.file.filename}`,
+        name,
+        details
+      });
+      console.log( `/uploads/${req.file.filename}`)
+  
+      await Category.save();
+      res.send({ message: 'Category uploaded successfully' });
     }
-});
-
-
-app.post('/addCategory',upload.single('image'),async (req, res) => {
-    try {
-        const { buffer } = req.file;
-        const {
-            name,
-            details
-        } = req.body;
-
-        const Category = new category({
-            image: {
-                data: buffer,
-                contentType: 'image/jpg',
-            },
-            name,
-            details
-        });
-
-        await Category.save();
-        res.status(201).json({ sent: 'uploaded successfully'});
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ sent: 'failed to upload'});
-    }
-});
+  });
 
 app.post('/addPerson',upload.single('image'),async (req, res) => {
     try {
@@ -452,14 +489,14 @@ app.post('/add-featured', async (req, res) => {
 
             featuredProduct.save()
                 .then(result => {
-                    res.status(201).json({ sent: 'sent successfully'});
+                    res.status(201).send('sent successfully');
                 })
                 .catch(err => {
                     console.error(err);
-                    res.status(500).json({ sent: 'failed to send'});
+                    res.status(500).send('failed to send');
                 });
     } else {
-        res.status(404).json({ sent: 'product not found'});
+        res.status(404).send('product not found');
     }
     } catch (err) {
         console.error(err);
@@ -486,14 +523,14 @@ app.post('/add-discounted-product', async (req, res) => {
 
             discountedProduct.save()
                 .then(result => {
-                    res.status(201).json({ sent: 'sent successfully'});
+                    res.status(201).send('sent successfully');
                 })
                 .catch(err => {
                     console.error(err);
-                    res.status(500).json({ sent: 'failed to send'});
+                    res.status(500).json('failed to send');
                 });
     } else {
-        res.status(404).json({ sent: 'product not found'});
+        res.status(404).send('product not found');
     }
     } catch (err) {
         console.error(err);
@@ -501,45 +538,27 @@ app.post('/add-discounted-product', async (req, res) => {
     }
 });
 
-app.post('/upload-product', upload.single('image'), async (req, res) => {
-    try {
-        const { originalname, buffer } = req.file; // Extract file-related information
-        // Extract other form fields from req.body
-        const {
-            name,
-            partNumber,
-            manufacturer,
-            price,
-            brand,
-            category,
-            productDescription,
-            countryOfOrigin,
-            productDetails,
-        } = req.body;
-
-        const Product = new product({
-            image: {
-                data: buffer,
-                contentType: 'image/jpg',
-            },
-            name,
-            partNumber,
-            manufacturer,
-            price,
-            brand,
-            category,
-            productDescription,
-            countryOfOrigin,
-            productDetails,
-        });
-
-        await Product.save();
-        res.status(201).json({ sent: 'uploaded successfully'});
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ sent: 'failed to upload'});
+app.post('/upload-product', uploadFile, async (req, res) => {
+    if (req.file === undefined) {
+      res.status(400).send({ message: 'No file selected' });
+    } else {
+      const products = new product({
+        image: `/uploads/${req.file.filename}`,
+        name: req.body.name,
+        partNumber: req.body.partNumber,
+        manufacturer: req.body.manufacturer,
+        price: req.body.price,
+        brand: req.body.brand,
+        category: req.body.category,
+        countryOfOrigin: req.body.countryOfOrigin,
+        productDescription: req.body.productDescription,
+        productDetails: req.body.productDetails
+      });
+  
+      await products.save();
+      res.send({ message: 'Product uploaded successfully' });
     }
-});
+  });
 
 app.post('/addMessage', async (req,res) => {
     const {
@@ -566,7 +585,7 @@ app.post('/addMessage', async (req,res) => {
             })
             .catch(err => {
                 console.error(err);
-                res.status(500).json({ sent: 'failed to send'});
+                res.status(500).send('<h3>failed to send<h3/>');
             });
     } catch (err) {
         console.error(err);
@@ -669,9 +688,7 @@ try {
             createdAt: { $gte: oneWeekAgo }
         });
 
-        if (!messages || messages.length === 0) {
-            return res.status(404).send('Messages not found from the last week');
-        }
+        
 
         } catch (error) {
             console.error(error);
@@ -840,7 +857,7 @@ app.delete('/deletemember/:id', (req, res) => {
 
     members.findByIdAndDelete(id)
         .then(result => {
-            res.json({ delete: 'deleted successfully'});
+            res.send({ delete: 'deleted successfully'});
         })
         .catch(err => console.log(err));
 });

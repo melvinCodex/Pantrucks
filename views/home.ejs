@@ -8,21 +8,20 @@
     <ul class="nav-links">
         <li><a class="active" href="/">Home</a></li>
         <li><a href="/about-us">About Us</a></li>
-     <li class="drop-down">
+        <li class="drop-down">
             <a href="/categories">Categories</a>
             <div class="categories-container pop-up-menu">
                 <ul>
                     <% if (Category.length === 0) { %>
                         <p>No categories found.</p>
-                    <% }  else { %>
+                    <% } else { %>
                         <% Category.forEach(category => { %>
-                                <li data-tag="<%=category.name%>">
-                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
-                                    <h2><%= category.name %></h2>
-                                </li>
+                            <li data-tag="<%= category.name %>">
+                                <img src="<%= category.image %>" alt="<%= category.name %>">
+                                <h2><%= category.name %></h2>
+                            </li>
                         <% }); %>
                     <% } %>
-                    
                 </ul>
             </div>
         </li>
@@ -32,17 +31,18 @@
                 <ul>
                     <% if (Services.length === 0) { %>
                         <p>No services found.</p>
-                    <% }  else { %>
-                        <% Services.forEach(category => { %>
-                                <li data-tag="<%=category.name%>">
-                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
-                                    <h2><%= category.name %></h2>
-                                </li>
+                    <% } else { %>
+                        <% Services.forEach(service => { %>
+                            <li data-tag="<%= service.name %>">
+                                <img src="<%= service.image %>" alt="<%= service.name %>">
+                                <h2><%= service.name %></h2>
+                            </li>
                         <% }); %>
                     <% } %>
                 </ul>
             </div>
         </li>
+        
         <li><a href="/shop">Shop</a></li>
         <li><a href="/contact-us">Contact Us</a></li>
     </ul>
@@ -50,22 +50,20 @@
         <span class="icon"><img src="Images/search.png"></span>
         <input type="search" placeholder=" Search through our collection">
         <div class="search-parts-container">
-            <div class="card">
-                <img src="Images/chasis.png">
-                <h3>Named product</h3>
-            </div>
             <% if (Products.length === 0) { %>
                 <p>No products found.</p>
             <% } else { %>
                 <% Products.forEach(Product => { %>
-                    <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>">
-                        <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
-                        <h3><%= Product.name %></h3>
-                    </div>
+                    <a href="/details/<%= Product.i_d %>">
+                        <div class="card" data-category="<%= Product.category %>" data-brand="<%= Product.brand %>">
+                            <img src="<%= Product.image %>" alt="<%= Product.name %>">
+                            <h3><%= Product.name %></h3>
+                        </div>
+                    </a>
                 <% }); %>
-            <% } %> 
-        </div>` 
+            <% } %>  
         </div>
+    </div>
     <ul class="nav-icons">
         <li><h3 class="cartCount"><%=cartProducts.length%></h3><a href="/cart"><img src="Images/cart.png" id="cart"></a></li>
         <li id="open"><img src="Images/open.png"></li>
@@ -78,7 +76,8 @@
         <div class="banner-tag">
             <h1>Pan Tracks</h1>
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis fugiat dolores iure impedit esse dolore cum tempore enim atque exercitationem Lorem ipsum, dolor sit amet consectetur adipisicing elit. Earum, iusto! voluptatum neque quas, nemo, nobis repellendus minima sapiente minus eius eos ipsam consectet Sequi, voluptates quaerat, laboriosam optio commodi alias facere aliquid explicabo adipisci cumque fugiat nesciunt repellat quia voluptatibus, obcaecati consequatur error.
+                PanTrucks is a leading provider of high-quality trailer spare parts, dedicated to ensuring the smooth operation and safety of trailers across diverse industries. With over 10 years of experience in the field, we have established ourselves as a trusted partner for individuals and businesses seeking reliable solutions for their trailer maintenance and repair needs.
+                Backed by a team of knowledgeable professionals, we are committed to providing expert guidance and support to our customers. Whether you're a seasoned mechanic or a first-time trailer owner, our friendly and experienced staff are here to assist you every step of the way, from product selection to installation and beyond.
             </p>
         </div>
         <span class="forward"><img src="Images/forward.png"></span>
@@ -111,12 +110,12 @@
                                 const matchingProduct = Products.find(product => product.name === feature.name);
                                 return matchingProduct;
                             }).slice(0, 30); %>
-                    
+                        
                             <% featuredproducts.forEach((feature, index) => { %>
                                 <% const matchingProduct = Products.find(product => product.name === feature.name); %>
                                 <% if (matchingProduct) { %>
                                     <div class="card <%= index >= 8 ? 'none' : '' %>" data-tag="<%= matchingProduct.category %>">
-                                        <img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>">
+                                        <img src="<%= matchingProduct.image %>" alt="<%= matchingProduct.name %>">
                                         <h2><%= matchingProduct.name %></h2>
                                         <h3>Ksh <%= matchingProduct.price %> /-</h3>
                                         <div class="button-container">
@@ -150,36 +149,36 @@
                         <% } %>  
                     </div>
                     
+                    
                  
                 </div>
             </div>
         </div>
         <div class="discounted-items">
-                    <h2>Discounted products Available</h2>
-                    <div class="mini-card-container">
-                        <% if (discountedproducts.length === 0) { %>
-                            <p>No discounted products found.</p>
-                        <% }  else { %>
-            
-                            <% discountedproducts = discountedproducts.filter(discounted => {
-                                const matchingProduct = Products.find(product => product.name === discounted.name);
-                                return matchingProduct;
-                            }); %>
-    
-                            <% discountedproducts.forEach(discounted => { %>
-                                <% const matchingProduct = Products.find(product => product.name === discounted.name); %>
-                                    <div class="mini-card">
-                                        <% if (matchingProduct) { %>
-                                            <img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>">
-                                        <% } %>
-                                        <h3 class="warning">Was  : <span class="Was">Ksh <%= discounted.previousPrice %></span></h3>
-                                        <h3>Now : <span class="after">Ksh <%= discounted.currentPrice %></span></h3>
-                                    </div>
-                               
-                            <% }); %>
+            <h2>Discounted products Available</h2>
+            <div class="mini-card-container">
+                <% if (discountedproducts.length === 0) { %>
+                    <p>No discounted products found.</p>
+                <% } else { %>
+                    <% discountedproducts = discountedproducts.filter(discounted => {
+                        const matchingProduct = Products.find(product => product.name === discounted.name);
+                        return matchingProduct;
+                    }); %>
+        
+                    <% discountedproducts.forEach(discounted => { %>
+                        <% const matchingProduct = Products.find(product => product.name === discounted.name); %>
+                        <% if (matchingProduct) { %>
+                            <div class="mini-card">
+                                <img src="<%= matchingProduct.image %>" alt="<%= matchingProduct.name %>">
+                                <h3 class="warning">Was: <span class="Was">Ksh <%= discounted.previousPrice %></span></h3>
+                                <h3>Now: <span class="after">Ksh <%= discounted.currentPrice %></span></h3>
+                            </div>
                         <% } %>
-                    </div>
+                    <% }); %>
+                <% } %>
+            </div>
         </div>
+        
     </section>
 
 
@@ -220,7 +219,7 @@
                     <% const matchingProduct = Products.find(product => product.name === choice.name); %>
                     <% if (matchingProduct) { %>
                         <div class="card <%= index >= 12 ? 'none' : '' %>" data-category="<%= matchingProduct.category %>" data-brand="<%= matchingProduct.brand %>">
-                            <img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>">
+                            <img src="<%= matchingProduct.image %>" alt="<%= matchingProduct.name %>">
                             <h2><%= matchingProduct.name %></h2>
                             <h3>Ksh <%= matchingProduct.price %> /-</h3>
                             <div class="button-container">
@@ -254,6 +253,7 @@
             <% } %>
         </div>
         
+        
     </div>
     </section>
 
@@ -283,7 +283,7 @@
                             <% const matchingProduct = Products.find(product => product.name === choice.name); %>
                             <% if (matchingProduct) { %>
                                 <div class="card <%= index >= 8 ? 'none' : '' %>" data-category="<%= matchingProduct.category %>" data-brand="<%= matchingProduct.brand %>">
-                                    <img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>">
+                                    <img src="<%= matchingProduct.image %>" alt="<%= matchingProduct.name %>">
                                     <h2><%= matchingProduct.name %></h2>
                                     <h3>Ksh <%= matchingProduct.price %> /-</h3>
                                     <div class="button-container">
@@ -317,6 +317,7 @@
                     <% } %>
                 </div>
                 
+                
                 </div>
             </div>
         </div>
@@ -328,8 +329,8 @@
         <h2>CUSTOMER REVIEWS</h2>
         <div class="card-container">
             <div class="review card1">
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
-                <h4>Name of Person</h4>
+                <p>"PanTrucks offers top-notch trailer spare parts with unmatched quality assurance and excellent customer satisfaction. Highly recommend!"</p>
+                <h4>Alex Kirui</h4>
                 <div class="rating">
                     <img src="Images/star.png">
                     <img src="Images/star.png">
@@ -339,8 +340,8 @@
                 </div>
             </div>
             <div class="review card2">
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
-                <h4>Name of Person</h4>
+                <p>"Knowledgeable staff and high-quality parts made my experience with PanTrucks outstanding. Their commitment to customer support is exceptional."</p>
+                <h4>John Kamau</h4>
                 <div class="rating">
                     <img src="Images/star.png">
                     <img src="Images/star.png">
@@ -350,8 +351,8 @@
                 </div>
             </div>
             <div class="review card3">
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
-                <h4>Name of Person</h4>
+                <p>"Fantastic team, superior quality parts, and seamless service from PanTrucks. Highly recommend for all your trailer needs."</p>
+                <h4>Sarah Makena</h4>
                 <div class="rating">
                     <img src="Images/star.png">
                     <img src="Images/star.png">
@@ -361,8 +362,8 @@
                 </div>
             </div>
             <div class="review card4">
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
-                <h4>Name of Person</h4>
+                <p>"PanTrucks consistently delivers top-quality parts and outstanding customer service. They are my go-to for trailer spare parts."</p>
+                <h4>David Ochieng'</h4>
                 <div class="rating">
                     <img src="Images/star.png">
                     <img src="Images/star.png">
@@ -372,8 +373,8 @@
                 </div>
             </div>
             <div class="review card5">
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta cum nisi numquam?</p>
-                <h4>Name of Person</h4>
+                <p>"Durable parts and excellent support from PanTrucks made my purchase stress-free. Highly satisfied with their service."</p>
+                <h4>Abdul Musharaaf</h4>
                 <div class="rating">
                     <img src="Images/star.png">
                     <img src="Images/star.png">

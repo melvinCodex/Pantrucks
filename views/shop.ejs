@@ -14,15 +14,14 @@
                 <ul>
                     <% if (Category.length === 0) { %>
                         <p>No categories found.</p>
-                    <% }  else { %>
+                    <% } else { %>
                         <% Category.forEach(category => { %>
-                                <li data-tag="<%=category.name%>">
-                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
-                                    <h2><%= category.name %></h2>
-                                </li>
+                            <li data-tag="<%= category.name %>">
+                                <img src="<%= category.image %>" alt="<%= category.name %>">
+                                <h2><%= category.name %></h2>
+                            </li>
                         <% }); %>
                     <% } %>
-                    
                 </ul>
             </div>
         </li>
@@ -32,17 +31,18 @@
                 <ul>
                     <% if (Services.length === 0) { %>
                         <p>No services found.</p>
-                    <% }  else { %>
-                        <% Services.forEach(category => { %>
-                                <li data-tag="<%=category.name%>">
-                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
-                                    <h2><%= category.name %></h2>
-                                </li>
+                    <% } else { %>
+                        <% Services.forEach(service => { %>
+                            <li data-tag="<%= service.name %>">
+                                <img src="<%= service.image %>" alt="<%= service.name %>">
+                                <h2><%= service.name %></h2>
+                            </li>
                         <% }); %>
                     <% } %>
                 </ul>
             </div>
         </li>
+        
         <li><a class="active" href="/shop">Shop</a></li>
         <li><a href="/contact-us">Contact Us</a></li>
     </ul>
@@ -54,9 +54,9 @@
                 <p>No products found.</p>
             <% } else { %>
                 <% Products.forEach(Product => { %>
-                    <a href="/details/<%=Product.i_d%>">
-                        <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>">
-                            <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                    <a href="/details/<%= Product.i_d %>">
+                        <div class="card" data-category="<%= Product.category %>" data-brand="<%= Product.brand %>">
+                            <img src="<%= Product.image %>" alt="<%= Product.name %>">
                             <h3><%= Product.name %></h3>
                         </div>
                     </a>
@@ -64,6 +64,7 @@
             <% } %>  
         </div>
     </div>
+    
     <ul class="nav-icons">
         <li><h3 class="cartCount"><%=cartProducts.length%></h3><a href="/cart"><img src="Images/cart.png" id="cart"></a></li>
         <li id="open"><img src="Images/open.png"></li>
@@ -95,7 +96,7 @@
             <li>Engine</li>
             <li>Brakes</li>
             <li>Hydraulics</li>
-            <li>Accesories</li>
+            <li>Accessories</li>
         </ul>
     </div>
 </section>
@@ -104,18 +105,17 @@
 <section class="parts">
     <h5>Page <%= currentPage %> / <%= totalPages %></h5>
     <div class="card-container">
-        <% if (Products.length === 0) { %>
+        <% if (products.length === 0) { %>
             <p>No products found.</p>
         <% } else { %>
-            <% products.forEach(Product => { %>
-                <div class="card" data-category="<%= Product.category %>" data-brand="<%= Product.brand %>">
-                    <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
-                    <h2><%= Product.name %></h2>
-                    <h3>Ksh <%= Product.price %> /-</h3>
+            <% products.forEach(product => { %>
+                <div class="card" data-category="<%= product.category %>" data-brand="<%= product.brand %>">
+                    <img src="<%= product.image %>" alt="<%= product.name %>">
+                    <h2><%= product.name %></h2>
+                    <h3>Ksh <%= product.price %> /-</h3>
                     <div class="button-container">
-                        <button class="success" data-tag="<%= Product.name %>">Add to Cart</button>
+                        <button class="success" data-tag="<%= product.name %>">Add to Cart</button>
                         <button class="danger">Details<span></span></button> 
-                        
                     </div>
                     <div class="rating">
                         <img src="Images/star.png">
@@ -126,23 +126,23 @@
                     </div>
                     <div class="cardDetails none">
                         <p>
-                            Description: <%= Product.productDescription %>
+                            Description: <%= product.productDescription %>
                         </p>
                         <p>
-                            <span >Country of Origin:</span> <%= Product.countryOfOrigin %>
+                            <span>Country of Origin:</span> <%= product.countryOfOrigin %>
                         </p>
                         <p>
-                            <span >Part Number:</span> <%= Product.partNumber %>
+                            <span>Part Number:</span> <%= product.partNumber %>
                         </p>
                         <p>
-                            <span >Manufacturer:</span> <%= Product.manufacturer %>
+                            <span>Manufacturer:</span> <%= product.manufacturer %>
                         </p>
                     </div>
                 </div>
             <% }); %>
         <% } %>        
     </div>
-    <div class="loading none" style=" position: relative; left: 14rem; width: 20%; padding: 2rem; background: rgba(173, 173, 173, 0);">
+    <div class="loading none" style="position: relative; left: 14rem; width: 20%; padding: 2rem; background: rgba(173, 173, 173, 0);">
         <img src="Images/loading.gif" alt="Loading...">
     </div>
     <div class="navigators">
@@ -154,12 +154,6 @@
         <% } %>
     </div>
 </section>
-
-
-<script>
-
-
-</script>
 
 
 

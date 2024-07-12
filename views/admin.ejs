@@ -13,15 +13,14 @@
                 <ul>
                     <% if (Category.length === 0) { %>
                         <p>No categories found.</p>
-                    <% }  else { %>
+                    <% } else { %>
                         <% Category.forEach(category => { %>
-                                <li data-tag="<%=category.name%>">
-                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
-                                    <h2><%= category.name %></h2>
-                                </li>
+                            <li data-tag="<%= category.name %>">
+                                <img src="<%= category.image %>" alt="<%= category.name %>">
+                                <h2><%= category.name %></h2>
+                            </li>
                         <% }); %>
                     <% } %>
-                    
                 </ul>
             </div>
         </li>
@@ -31,17 +30,18 @@
                 <ul>
                     <% if (Services.length === 0) { %>
                         <p>No services found.</p>
-                    <% }  else { %>
-                        <% Services.forEach(category => { %>
-                                <li data-tag="<%=category.name%>">
-                                    <img src="data:image/jpg;base64,<%= category.image.data.toString('base64') %>" alt="<%= category.name %>">
-                                    <h2><%= category.name %></h2>
-                                </li>
+                    <% } else { %>
+                        <% Services.forEach(service => { %>
+                            <li data-tag="<%= service.name %>">
+                                <img src="<%= service.image %>" alt="<%= service.name %>">
+                                <h2><%= service.name %></h2>
+                            </li>
                         <% }); %>
                     <% } %>
                 </ul>
             </div>
         </li>
+        
         <li><a href="/shop">Shop</a></li>
         <li><a href="/contact-us">Contact Us</a></li>
     </ul>
@@ -53,9 +53,9 @@
                 <p>No products found.</p>
             <% } else { %>
                 <% Products.forEach(Product => { %>
-                    <a href="/details/<%=Product.i_d%>">
-                        <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>">
-                            <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                    <a href="/details/<%= Product.i_d %>">
+                        <div class="card" data-category="<%= Product.category %>" data-brand="<%= Product.brand %>">
+                            <img src="<%= Product.image %>" alt="<%= Product.name %>">
                             <h3><%= Product.name %></h3>
                         </div>
                     </a>
@@ -149,7 +149,7 @@
                                         <% const matchingProduct = Products.find(product => product.name === item.name); %>
                                         <% if (matchingProduct) { %>
                                             <tr>
-                                                <td class="product-image"><img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>"></td>
+                                                <td class="product-image"><img src="<%=matchingProduct.image%>" alt="<%= matchingProduct.name %>"></td>
                                                 <td><h2 class="productName"><%= matchingProduct.name %></h2></td>
                                                 <td class="Description"><p><%= matchingProduct.productDescription %></p></td>
                                             </tr>
@@ -291,7 +291,7 @@
                         <% } else { %>
                             <% Products.forEach(Product => { %>
                                 <div class="product card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>" data-unique="<%=Product._id%>">
-                                    <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                                    <img src="<%= Product.image%>" alt="<%= Product.name %>">
                                     <h3><%= Product.name %></h3>
                                 </div>
                             <% }); %>
@@ -312,7 +312,7 @@
                             <% const matchingProduct = Products.find(product => product.name === feature.name); %>
                                 <div class="card" data-unique="<%=feature._id%>">
                                     <% if (matchingProduct) { %>
-                                        <img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>">
+                                        <img src="<%= matchingProduct.image %>" alt="<%= matchingProduct.name %>">
                                     <% } %>
                                     <h2><%= matchingProduct.name %></h2>
                                     <h3>Ksh <%= matchingProduct.price %> /-</h3>
@@ -356,7 +356,7 @@
                     <% } else { %>
                         <% Products.forEach(Product => { %>
                             <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>" data-unique="<%=Product._id%>">
-                                <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                                <img src="<%= Product.image %>" alt="<%= Product.name %>">
                                 <h3><%= Product.name %></h3>
                             </div>
                         <% }); %>
@@ -377,7 +377,7 @@
                             <% const matchingProduct = Products.find(product => product.name === discounted.name); %>
                                 <div class="card" data-unique="<%=discounted._id%>">
                                     <% if (matchingProduct) { %>
-                                        <img src="data:image/jpg;base64,<%= matchingProduct.image.data.toString('base64') %>" alt="<%= matchingProduct.name %>">
+                                        <img src="<%= matchingProduct.image %>" alt="<%= matchingProduct.name %>">
                                     <% } %>
                                     <h3 class="warning">Was  : <span class="Was">Ksh <%= discounted.previousPrice %></span></h3>
                                     <h3>Now : <span class="after">Ksh <%= discounted.currentPrice %></span></h3>
@@ -426,7 +426,7 @@
                     <% } else { %>
                         <% Products.forEach(Product => { %>
                             <div class="card" data-category= "<%= Product.category %>" data-brand= "<%= Product.brand %>" data-unique="<%=Product._id%>">
-                                <img src="data:image/jpg;base64,<%= Product.image.data.toString('base64') %>" alt="<%= Product.name %>">
+                                <img src="<%= Product.image%>" alt="<%= Product.name %>">
                                 <h2><%= Product.name %></h2>
                                 <h3>Ksh <%= Product.price %> /-</h3>
                                 <div class="button-container">
