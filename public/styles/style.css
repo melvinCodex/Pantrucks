@@ -18,7 +18,8 @@
     --color-hov: rgba(247, 31, 16, 0.8);
     --color-danger-variant: rgba(247,88,66,0.4);
     --color-white: #fff;
-    --color-light: rgba(255,255,255,0.7);
+    --color-accent: #000000;
+    --color-light: rgb(255, 255, 255);
     --color-black: #000;
     --color-bg: #1f2641;
     --color-bg1: #c9c9c9;
@@ -56,7 +57,7 @@ body{
     position: absolute;
     left: 15%;
     padding: 1rem;
-    background-color: rgba(185, 185, 185, 0.726);
+    background-color: rgba(233, 229, 229, 0.884);
     border: 1px solid;
     border-radius: 1rem;
     width: 70%;
@@ -91,12 +92,12 @@ h4 {
     background-color: var(--color-primary);
 }
 .success{
-    color: black;
+    color: rgb(3, 3, 3);
     background-color: var(--color-success);
     cursor: pointer;
 }
 .warning{
-    color: rgb(255, 0, 0);
+    color: rgba(255, 51, 0, 0.87);
     cursor: pointer;
 }
 .danger{
@@ -123,20 +124,45 @@ section{
     justify-content: space-between;
     gap: 1.5rem;
 }
-.card{
-   display: flex;
-   flex-direction: column;
-   height: fit-content;
-   padding: 5px 1px;
-   transition: var(--transition);
-   border: 1px solid transparent;
-   gap: .3rem;
-   justify-content: space-between;
-   border-radius: 5px;
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    padding: 5px 1px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    border: 1px solid transparent;
+    gap: 0.3rem;
+    justify-content: space-between;
+    border-radius: 5px;
+    overflow: hidden; /* Allow for overflow outside the card */
+    background: #fff; /* Ensure background color */
 }
-.card:hover{
-    box-shadow: 0 0 .5rem var(--color-black);
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(135deg, transparent 50%, rgba(105, 0, 0, 0.5) 50%);
+    transform: rotate(45deg) translate(-100%, -100%);
+    pointer-events: none;
+    z-index: -1;
+    transition: transform 0.5s ease;
 }
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #ffffff, #f0f0f0);
+}
+
+.card:hover::before {
+    transform: rotate(45deg) translate(0, 0);
+}
+
 .card h2,
 .card h3{
     font-size: medium;
@@ -164,8 +190,9 @@ section{
     border: 1px solid var(--color-bg2);
     box-shadow: 0 0 .5rem var(--color-black);
 }
+
 .rating{
-    display: none;
+    display: flex;
     flex-direction: row;
     gap: 5px;
     margin-top: .5rem;
@@ -183,15 +210,43 @@ section{
     display: flex;
     justify-content: space-between;
 }
-button{
-    border-radius: 4px;
-    transition: var(--transition);
-    padding: 5px 10px;
+button {
+    border-radius: 5px;
+    transition: all 0.4s ease;
+    padding: 10px 10px;
     font-weight: 600;
+    border: 2px solid var(--color-black);
+    background-color: rgba(110, 110, 110, 0.493);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
 }
-button:hover{
-    filter: invert(.7);
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-accent);
+    z-index: -1;
+    transition: all 0.4s ease;
+    transform: scaleX(0);
+    transform-origin: right;
 }
+
+button:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+button:hover {
+    color: var(--color-white);
+    border-color: var(--color-accent);
+}
+
 .navigators{
     display: flex;
     flex-direction: row;
@@ -406,6 +461,9 @@ nav .nav-icons li:hover img{
 
 
 
+
+
+
 .footer{
     display: grid;
     grid-template-columns: 25% 20% 25% 30%;
@@ -491,27 +549,25 @@ nav .nav-icons li:hover img{
     display: flex;
 }
 .customer-reviews .card-container .card1{
-    animation: scroll 20s linear infinite;
+    animation: scroll 45s linear infinite;
 }
 .customer-reviews .card-container .card2{
-    animation: scroll 20s linear infinite;
-    animation-delay: 2s;
+    animation: scroll 45s linear infinite;
+    animation-delay: 5s;
 }
 .customer-reviews .card-container .card3{
-    animation: scroll 20s linear infinite;
-    animation-delay: 4s;
+    animation: scroll 45s linear infinite;
+    animation-delay: 10s;
 }
 .customer-reviews .card-container .card4{
-    animation: scroll 20s linear infinite;
-    animation-delay: 6s;
+    animation: scroll 45s linear infinite;
+    animation-delay: 15s;
 }
 .customer-reviews .card-container .card5{
-    animation: scroll 20s linear infinite;
-    animation-delay: 8s;
+    animation: scroll 45s linear infinite;
+    animation-delay: 20s;
 }
-.review{
-    width: 20rem;
-}
+
 @keyframes scroll {
     0% {
         transform: translateX(0);
@@ -569,7 +625,7 @@ nav .nav-icons li:hover img{
     height: 100%;
     background-size: cover;
     background-position: center;
-    animation: changeBackground 20s infinite;
+    animation: changeBackground 45s infinite;
 }
 
 
@@ -577,7 +633,7 @@ nav .nav-icons li:hover img{
 
 @media screen and (max-width: 1050px){
     nav .pop-up-menu{
-        width: 20rem;
+        width: 10rem;
     }
     nav .pop-up-menu ul li{
         border-bottom: transparent;
@@ -613,6 +669,50 @@ nav .nav-icons li:hover img{
     }
 }
 @media screen and (max-width: 550px){
+    .review{
+        min-width: 20rem;
+    }
+    .customer-reviews .card-container .card1{
+        animation: scroll 20s linear infinite;
+    }
+    .customer-reviews .card-container .card2{
+        animation: scroll 20s linear infinite;
+        animation-delay: 1s;
+    }
+    .customer-reviews .card-container .card3{
+        animation: scroll 20s linear infinite;
+        animation-delay: 2s;
+    }
+    .customer-reviews .card-container .card4{
+        animation: scroll 20s linear infinite;
+        animation-delay: 3s;
+    }
+    .customer-reviews .card-container .card5{
+        animation: scroll 20s linear infinite;
+        animation-delay: 4s;
+    }
+    @keyframes scroll {
+        0% {
+            transform: translateX(0);
+        }
+        69% {
+            transform: translateX(-250vw);
+            opacity: 1;
+        }
+        69.001%{
+            opacity: 0;
+        }
+        69.999%{
+            opacity: 0;
+        }
+        70%{
+            transform: translateX(100vw);
+            opacity: 1;
+        }
+        100%{
+            transform: translateX(0);
+        }
+    }
     .customer-reviews h2{
         font-size: 1.2rem;
         transform: translateX(22vw);
@@ -689,5 +789,39 @@ nav .nav-icons li:hover img{
     width: 90%;
     transform: translateY(6rem);
     margin: 0 1rem;
-}
+    }
+     .nav-links li {
+        opacity: 0;
+        transform: translateY(-30px);
+        animation: slideIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+      }
+      
+      .nav-links li:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      
+      .nav-links li:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      
+      .nav-links li:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      
+      .nav-links li:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+      .nav-links li:nth-child(5) {
+        animation-delay: 0.4s;
+      }
+      .nav-links li:nth-child(6) {
+        animation-delay: 0.4s;
+      }
+      
+      @keyframes slideIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 }

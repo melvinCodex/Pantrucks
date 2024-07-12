@@ -27,10 +27,20 @@ openButton.addEventListener('click', ()=>{
     navLinks.style.display = 'block';
     openButton.style.display = 'none';
     closeButton.style.display = 'block';
+    navLinks.querySelectorAll('li').forEach((item, index) => {
+        item.style.animation = `slideIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards ${0.1 * index}s`;
+      });
 });
 
 closeButton.addEventListener('click', ()=>{
-    navLinks.style.display = 'none';
+    navLinks.querySelectorAll('li').forEach(item => {
+        item.style.animation = 'none';
+        item.style.opacity = 0;
+        item.style.transform = 'translateY(-30px)';
+      });
+    setTimeout(() => {
+        navLinks.style.display = 'none';
+    }, 200);
     closeButton.style.display = 'none';
     openButton.style.display = 'block';
 });

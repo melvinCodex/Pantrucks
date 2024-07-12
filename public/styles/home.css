@@ -390,6 +390,8 @@
         transform: translateX(1px);
         padding: 1rem .6rem;
         height: fit-content;
+        width: 90%;
+        margin-left: 1rem;
     }
     .featured-products > h2{
         font-size: 1.6rem;
